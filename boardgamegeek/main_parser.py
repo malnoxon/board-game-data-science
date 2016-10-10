@@ -1,3 +1,7 @@
+# Given a path to dir with BoardGameGeek html files, iterates through files, scraping 
+# relevant data for each game, and writing to CSV file in aforementioned directory
+# To run: python main_parser.py [PATH TO FILES]
+
 from bs4 import BeautifulSoup
 import pandas as pd
 import re
@@ -77,9 +81,11 @@ def parse_bgg_folder(mypath):
         try:
             df = df.append(pd.Series(parse_bgg_page(mypath+page)), ignore_index=True)
         except Exception as e:
+	    # Prints out misc exceptions
             print page +': '+ str(e)
             continue
 
+    # Writes to file, comma-separated and with unicode encoding
     df.to_csv(mypath+'bgg_data.csv', encoding='utf-8')
     
 
