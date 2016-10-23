@@ -18,6 +18,21 @@ def gen_max_player(x):
     except ValueError:
         return int(re.findall('\d+', x)[1])
 
+def gen_min_gameplay_time(x):
+    if pd.isnull(x):
+        return x
+    return int(re.findall('\d+', x)[0])
+
+def gen_max_gameplay_time(x):
+    if pd.isnull(x):
+        return x
+    values = re.findall('\d+', x)
+    if len(values) == 2:
+        return int(values[1])
+    else:
+        return int(values[0])
+
+
 df = pd.read_csv(open('TableA.csv', 'rb'))
 
 # Munge min/max players
@@ -35,8 +50,12 @@ df['complexity_weight'] = df['complexity_weight'].apply((lambda x: float(re.find
 # We assume that rating of 0.0 are caused by missing values, since webpage renders "--" as value
 df['rating'] = df['rating'].apply((lambda x: x or np.NaN))
 
+#gameplay_time cleanup
+df['min_gameplay_time'] = df['gameplay_time'].apply(gen_min_gameplay_time)
+df['max_gameplay_time'] = df['gameplay_time'].apply(gen_max_gameplay_time)
+
 # Slice schema columns
-columns = ['id', 'name', 'year', 'age', 'min_players', 'max_players', 'gameplay_time', 'complexity_weight', 'rating']
+columns = ['id', 'name', 'year', 'age', 'min_players', 'max_players', 'min_gameplay_time', 'max_gameplay_time', 'complexity_weight', 'rating']
 df = df[columns]
 
 print 'Head of cleaned up TableA'
@@ -50,7 +69,7 @@ for c in columns:
     print 'Percentage missing: {0:.6f}%'.format(percent)
 
 print 'Textual category reporting'
-text_col = ['id', 'name', 'gameplay_time']
+text_col = ['id', 'name']
 for c in text_col:
     print 'Attribute: ' + c
     lengths = map((lambda x: 0 if pd.isnull(x) else len(x)), df[c])
