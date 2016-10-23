@@ -28,7 +28,12 @@ df['max_players'] = df['num_players'].apply(gen_max_player)
 df['age'] = df['age'].apply((lambda x: x if pd.isnull(x) else int(re.findall('\d+', x)[0])))
 
 #complexity_weight cleanup
-df['complexity_weight'] = df['complexity_weight'].apply((lambda x: None if not x else float(re.findall('\d+\.\d*', x)[0])))
+# We assume that 0.0/5 scores are due to lack of data/missing values, since webpage renders "--" as value
+df['complexity_weight'] = df['complexity_weight'].apply((lambda x: float(re.findall('\d+\.\d*', x)[0]) or np.NaN))
+
+#Rating cleanup
+# We assume that rating of 0.0 are caused by missing values, since webpage renders "--" as value
+df['rating'] = df['rating'].apply((lambda x: x or np.NaN))
 
 # Slice schema columns
 columns = ['id', 'name', 'year', 'age', 'min_players', 'max_players', 'gameplay_time', 'complexity_weight', 'rating']
