@@ -40,7 +40,7 @@ df['min_players'] = df['num_players'].apply(gen_min_player)
 df['max_players'] = df['num_players'].apply(gen_max_player)
 
 # Age cleanup
-df['age'] = df['age'].apply((lambda x: x if pd.isnull(x) else int(re.findall('\d+', x)[0])))
+df['min_age'] = df['age'].apply((lambda x: x if pd.isnull(x) else int(re.findall('\d+', x)[0])))
 
 #complexity_weight cleanup
 # We assume that 0.0/5 scores are due to lack of data/missing values, since webpage renders "--" as value
@@ -55,8 +55,16 @@ df['min_gameplay_time'] = df['gameplay_time'].apply(gen_min_gameplay_time)
 df['max_gameplay_time'] = df['gameplay_time'].apply(gen_max_gameplay_time)
 
 # Slice schema columns
-columns = ['id', 'name', 'year', 'age', 'min_players', 'max_players', 'min_gameplay_time', 'max_gameplay_time', 'complexity_weight', 'rating']
+columns = ['id', 'name', 'year', 'rating', 'rank', 'min_players', 'max_players', 'min_gameplay_time', 'max_gameplay_time', 'min_age', 'complexity_weight', 'category', 'mechanisms','type']
 df = df[columns]
+df['BGG_link'] = np.nan
+df['store_names'] = np.nan
+df['store_prices'] = np.nan
+df['links_to_buy'] = np.nan
+df['availability'] = np.nan
+df['international_store'] = np.nan
+
+df.to_csv('newTableA.csv')
 
 print 'Head of cleaned up TableA'
 print df.head()
@@ -69,10 +77,17 @@ for c in columns:
     print 'Percentage missing: {0:.6f}%'.format(percent)
 
 print 'Textual category reporting'
-text_col = ['id', 'name']
+text_col = ['name', 'type', 'category']
 for c in text_col:
     print 'Attribute: ' + c
     lengths = map((lambda x: 0 if pd.isnull(x) else len(x)), df[c])
     print 'Min length: ' + str(min(lengths))
     print 'Max length: ' + str(max(lengths))
     print 'Average length: {0:.4f}'.format(np.mean(lengths))
+    
+
+print 'Histogram analysis'
+
+print 'Attribute: name'
+lengths = map((lambda x: 0 if pd.isnull(x) else len(x)), df[c])
+    
