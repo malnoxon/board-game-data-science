@@ -43,7 +43,7 @@ with open('tableB.csv', 'r') as csv_in:
     with open('tableB_combined_schema.csv', 'w') as csv_out:
         csv_writer = csv.writer(csv_out)
         csv_reader = csv.reader(csv_in)
-        out_headers = ["id", "name", "year", "rating", "rank", "num_players", "min_num_players", "max_num_players", "gameplay_time", "min_gameplay_time", "max_gameplay_time", "age", "complexity_weight", "category", "mechanisms", "type", "BGG_link", "store_names", "store_prices", "links_to_buy", "availability", "international_store"]
+        out_headers = ["id", "name", "year", "rating", "rank", "num_players", "min_num_players", "max_num_players", "gameplay_time", "min_gameplay_time", "max_gameplay_time", "min_age", "complexity_weight", "category", "mechanisms", "type", "BGG_link", "store_names", "store_prices", "links_to_buy", "availability", "international_store"]
 
         csv_writer.writerow(out_headers)
         first_row = True
