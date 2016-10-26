@@ -74,13 +74,14 @@ total_entries = len(df)
 for c in columns:
     print 'Attribute: ' + c
     percent = 100.0*(float(sum(pd.isnull(df[c])))/total_entries)
-    print 'Percentage missing: {0:.6f}%'.format(percent)
+    print '> Percentage missing: {0:.6f}%'.format(percent)
+    print '> Fraction missing: '+str(sum(pd.isnull(df[c]))) + '/'+str(total_entries)
 
 print 'Textual category reporting'
 text_col = ['name', 'type', 'category']
 for c in text_col:
     print 'Attribute: ' + c
-    lengths = map((lambda x: 0 if pd.isnull(x) else len(x)), df[c])
+    lengths = map(len, filter((lambda x: not pd.isnull(x)), df[c]))
     print 'Min length: ' + str(min(lengths))
     print 'Max length: ' + str(max(lengths))
     print 'Average length: {0:.4f}'.format(np.mean(lengths))
