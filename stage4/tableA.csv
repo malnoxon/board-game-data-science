@@ -1,4 +1,4 @@
-id,name,year,rating,rank,min_players,max_players,min_gameplay_time,max_gameplay_time,min_age,complexity_weight,category,mechanisms,type,BGG_link,store_names,store_prices,links_to_buy,availability,international_store
+id,name,year,rating,rank,min_num_players,max_num_players,min_gameplay_time,max_gameplay_time,min_age,complexity_weight,category,mechanisms,type,BGG_link,store_names,store_prices,links_to_buy,availability,international_store
 1,Sweet Valley High,1988.0,4.8,11444.0,2.0,4.0,30.0,30.0,8.0,1.0,Memory;Novel-based,Memory;Roll / Spin and Move;Set Collection,Admin: Better Description Needed!,,,,,,
 2,007 James Bond: You Only Live Twice,1985.0,5.7,,2.0,2.0,20.0,20.0,8.0,1.33,Adventure;Movies / TV / Radio theme;Novel-based,Roll / Spin and Move,007 James Bond Action Episode Games;Characters: James Bond,,,,,,
 3,Rock Paper Scissors Inc.,2003.0,5.0,,2.0,2.0,10.0,10.0,6.0,1.5,Bluffing;Economic;Print & Play,Rock-Paper-Scissors;Simultaneous Action Selection;Stock Holding,,,,,,,
