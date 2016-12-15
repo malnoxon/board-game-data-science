@@ -31,7 +31,9 @@ def gen_max_gameplay_time(x):
         return int(values[1])
     else:
         return int(values[0])
-def gen_min_price(x):
+def gen_min_price(x, y):
+    y = [z == "True" for z in y.split(',')]
+    print(y)
     if pd.isnull(x):
         return x
     try:
@@ -39,19 +41,70 @@ def gen_min_price(x):
     except ValueError:
         prices = []
         curr_str = ''
+        in_quotes = False
+        y_index = 0
         for p in x:
-            if p == ',':
-                if curr_str != '':
-                    prices.append(float(curr_str)) 
-                curr_str = ''
-            elif p in '0123456789.':
-                curr_str += p
-        if curr_str != '':
+            if in_quotes:
+                if p == '"':
+                    in_quotes = False
+                elif p in '0123456789.,':
+                    curr_str += p
+            else:
+                if p == '"':
+                    in_quotes = True
+                elif p == ',':
+                    if curr_str != '' and not y[y_index]:
+                        prices.append(float(curr_str)) 
+                    y_index += 1
+                    curr_str = ''
+                elif p in '0123456789.':
+                    curr_str += p
+        if curr_str != '' and not y[y_index]:
             prices.append(float(curr_str)) 
         
-        return min(prices)
+        if prices:
+            return min(prices)
+        else:
+            return ''
+def gen_max_price(x, y):
+    y = [z == "True" for z in y.split(',')]
+    print(y)
+    if pd.isnull(x):
+        return x
+    try:
+        return int(x) 
+    except ValueError:
+        prices = []
+        curr_str = ''
+        in_quotes = False
+        y_index = 0
+        for p in x:
+            if in_quotes:
+                if p == '"':
+                    in_quotes = False
+                elif p in '0123456789.,':
+                    curr_str += p
+            else:
+                if p == '"':
+                    in_quotes = True
+                elif p == ',':
+                    if curr_str != '' and not y[y_index]:
+                        prices.append(float(curr_str)) 
+                    y_index += 1
+                    curr_str = ''
+                elif p in '0123456789.':
+                    curr_str += p
+        if curr_str != '' and not y[y_index]:
+            prices.append(float(curr_str)) 
+        
+        if prices:
+            return max(prices)
+        else:
+            return ''
 
-def gen_max_price(x):
+def gen_mean_price(x, y):
+    y = [z == "True" for z in y.split(',')]
+    print(y)
     if pd.isnull(x):
         return x
     try:
@@ -59,43 +112,39 @@ def gen_max_price(x):
     except ValueError:
         prices = []
         curr_str = ''
+        in_quotes = False
+        y_index = 0
         for p in x:
-            if p == ',':
-                if curr_str != '':
-                    prices.append(float(curr_str)) 
-                curr_str = ''
-            elif p in '0123456789.':
-                curr_str += p
-        if curr_str != '':
+            if in_quotes:
+                if p == '"':
+                    in_quotes = False
+                elif p in '0123456789.,':
+                    curr_str += p
+            else:
+                if p == '"':
+                    in_quotes = True
+                elif p == ',':
+                    if curr_str != '' and not y[y_index]:
+                        prices.append(float(curr_str)) 
+                    y_index += 1
+                    curr_str = ''
+                elif p in '0123456789.':
+                    curr_str += p
+        if curr_str != '' and not y[y_index]:
             prices.append(float(curr_str)) 
         
-        return max(prices)
+        if prices:
+            return sum(prices)/len(prices)
+        else:
+            return ''
 
-def gen_mean_price(x):
-    if pd.isnull(x):
-        return x
-    try:
-        return int(x) 
-    except ValueError:
-        prices = []
-        curr_str = ''
-        for p in x:
-            if p == ',':
-                if curr_str != '':
-                    prices.append(float(curr_str)) 
-                curr_str = ''
-            elif p in '0123456789.':
-                curr_str += p
-        if curr_str != '':
-            prices.append(float(curr_str)) 
-        
-        return sum(prices)/len(prices)
 
 df = pd.read_csv(open('joined_table.csv', 'rb'))
 
-df['min_price'] = df['store_prices'].apply(gen_min_price)
-df['max_price'] = df['store_prices'].apply(gen_max_price)
-df['mean_price'] = df['store_prices'].apply(gen_mean_price)
+# df['min_price'] = df[['store_prices', 'international_store']].apply(gen_min_price)
+df['min_price'] = df.apply(lambda row: gen_min_price(row['store_prices'], row['international_store']), axis=1)
+df['max_price'] = df.apply(lambda row: gen_max_price(row['store_prices'], row['international_store']), axis=1)
+df['mean_price'] = df.apply(lambda row: gen_mean_price(row['store_prices'], row['international_store']), axis=1)
 
 # # Munge min/max players
 # df['min_players'] = df['num_players'].apply(gen_min_player)
